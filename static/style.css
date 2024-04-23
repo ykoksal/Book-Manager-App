@@ -1,0 +1,23 @@
+/* static/style.css */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    margin: 20px;
+}
+
+header {
+    background: rgb(6, 156, 96);
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+}
+
+footer {
+    background: rgb(6, 156, 96);
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}

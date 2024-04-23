@@ -1,0 +1,41 @@
+<!-- index.html -->
+{% extends 'base.html' %}
+{% block title %}Books App{% endblock %}
+{% block content %}
+<h2>Available Books</h2>
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Price</th>
+        <th></th>
+    </tr>
+    {% for book in books %}
+    <tr>
+        <td>{{ book.title }} </td>
+        <td>{{ book.author }} </td>
+        <td>${{ book.price }} </td>
+        <td><a href="{{ url_for('update_book', id=book.id) }}">Edit</a></td>
+        <td><a href="{{ url_for('delete_book', id=book.id) }}" onclick="return confirm('Are you sure to delete this book?');">Delete</a></td>
+    </tr>
+    {% endfor %}
+</table>
+<form action="{{ url_for('add_book') }}" method="POST">
+    <h2>Add New Book</h2>
+    <div>
+        <label for="title">Title</label>
+        <input type="text" name="title" id="title">
+    </div>
+    <div>
+        <label for="author">Author</label>
+        <input type="text" name="author" id="author">
+    </div>
+    <div>
+        <label for="price">Price</label>
+        <input type="text" name="price" id="price">
+    </div>
+    <div>
+        <button type="submit">Add</button>
+    </div>
+</form>
+{% endblock %}

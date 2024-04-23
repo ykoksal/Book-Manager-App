@@ -1,0 +1,16 @@
+**/logs
+*.log
+temp/
+flask-frontend/
+flask-frontend.zip
+try.py
+__pycache__/
+venv/
+base2.html
+base_example.html
+index_old.html
+user.html
+generate_secrets.py
+flask_exercise.py
+Instructions.md
+
