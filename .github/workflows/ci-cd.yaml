@@ -44,7 +44,7 @@ jobs:
         username: ${{ secrets.EC2_USER }}
         key: $HOME/ssh_key
         script: |
-          docker pull manwe88/bookstoreapp:${{ github.sha }
+          docker pull manwe88/bookstoreapp:${{ github.sha }}
           docker stop myapp || true
           docker rm myapp || true
           docker run -d --name myapp -p 5000:5000 manwe88/bookstoreapp:${{ github.sha }}
