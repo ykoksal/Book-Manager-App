@@ -33,16 +33,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: build_and_push
     steps:
-    - name: Decode SSH
-      run: |
-        echo "${{ secrets.EC2_SSH_KEY }}" | base64 --decode > $HOME/ssh_key
-        chmod 400 $HOME/ssh_key
     - name: SSH and Redeploy Docker Container
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USER }}
-        key: $HOME/ssh_key
+        key: ${{ secrets.EC2_SSH_KEY }}
         script: |
           docker pull manwe88/bookstoreapp:${{ github.sha }}
           docker stop myapp || true
