@@ -31,3 +31,89 @@ footer {
     background-color: #f2dede;
     border-color: #ebccd1;
 }
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #fdfdfd;
+    /* Light gray background */
+    color: #333;
+}
+
+h1,
+h2 {
+    text-align: center;
+    /* Center-aligning the headers */
+}
+
+table {
+    width: 60%;
+    border-collapse: collapse;
+    margin: 20px auto;
+    /* Centering the table */
+}
+
+th {
+    background-color: rgb(6, 156, 96); /* Changed to green */
+}
+td:nth-last-child(-n+1), th:nth-last-child(-n+1) {
+    background: none;
+    border: none;
+}
+
+
+a {
+    color: #0645ad;
+    /* Dark blue links */
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+form {
+    background-color: white;
+    padding: 15px;
+    border: 1px solid #b0c4de;
+    /* Soft blue border */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    margin: 20px auto;
+    /* Center the form */
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #b0c4de;
+    /* Consistent border color */
+    box-sizing: border-box;
+}
+
+button {
+    background-color: rgb(6, 156, 96);
+    /* Dark blue button */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 100%;
+}
+
+button:hover {
+    background-color: rgb(48, 234, 159);
+    /* Deeper blue on hover */
+}
+
+.form-container {
+    margin-top: 20px;
+}
