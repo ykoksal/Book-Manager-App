@@ -36,7 +36,7 @@ jobs:
     - name: Decode SSH
       run: |
         echo "${{ secrets.EC2_SSH_KEY }}" | base64 --decode > $HOME/ssh_key
-        
+        chmod 400 $HOME/ssh_key
     - name: SSH and Redeploy Docker Container
       uses: appleboy/ssh-action@master
       with:
