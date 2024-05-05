@@ -18,9 +18,6 @@ app = Flask(__name__)
 
 # # Set a secret key for sessions
 app.secret_key = "8a14GodB2hKSVCenA-l-zA"
-# app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
-# app.config['DEBUG_TB_FORCE_ENABLE'] = True
-# toolbar = DebugToolbarExtension(app)
 
 books = [
     {"id": 1, "title": "Godfather", "author": "Mario Puzo", "price": 25.99},

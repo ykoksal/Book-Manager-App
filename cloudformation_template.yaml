@@ -1,0 +1,159 @@
+Description:  This template deploys a VPC and within that a Subnet, EC2 and Internet Gateway for the Book Manager App.
+
+Parameters:
+  VpcCIDR:
+    Description: Please enter the IP range (CIDR notation) for this VPC
+    Type: String
+    Default: 10.12.0.0/16
+
+  PublicSubnet1CIDR:
+    Description: Please enter the IP range (CIDR notation) for the public subnet 
+    Type: String
+    Default: 10.12.0.0/24
+
+  KeyPairName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
+    Type: 'AWS::EC2::KeyPair::KeyName'  # standard type
+    ConstraintDescription: must be the name of an existing EC2 KeyPair.
+
+  AmiID:
+    Description: Please enter an available AMI id for the EC2 instance.
+    Type: String
+    Default: ami-098c93bd9d119c051
+
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCIDR
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: vpc-01
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: igw-01
+
+  InternetGatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      InternetGatewayId: !Ref InternetGateway
+      VpcId: !Ref VPC
+
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 0, !GetAZs '' ]
+      CidrBlock: !Ref PublicSubnet1CIDR
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: public-subnet-01
+
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: public-route-table-01
+
+  DefaultPublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: InternetGatewayAttachment
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  PublicSubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet1
+
+  SSHOpenSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupDescription: Enable ssh(22) access to the internet
+      GroupName: ssh-open-to-internet-sg
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        # allow ssh  
+        - IpProtocol: tcp
+          FromPort: '22'
+          ToPort: '22'
+          CidrIp: 0.0.0.0/0
+      Tags: 
+       - Key: Name
+         Value: ssh-open-to-internet-sg
+
+  FlaskOpenSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties: 
+      GroupDescription: Enable port 5000 access to the internet
+      GroupName: flask-open-to-internet-sg
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        # allow http  
+        - IpProtocol: tcp
+          FromPort: '5000'
+          ToPort: '5000'
+          CidrIp: 0.0.0.0/0
+      Tags: 
+       - Key: Name
+         Value: flask-open-to-internet-sg
+
+  EIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+
+  EC2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: t2.micro
+      SubnetId: !Ref PublicSubnet1
+      SecurityGroupIds:
+        - !Ref HTTPOpenSecurityGroup
+        - !Ref SSHOpenSecurityGroup
+      KeyName: !Ref KeyPairName
+      ImageId: !Ref AmiID
+      UserData: 
+        Fn::Base64: |
+          #!/bin/bash -xe
+          sudo yum update -y
+          sudo yum install -y docker
+          sudo service docker start
+          sudo usermod -aG docker ec2-user
+      Tags: 
+       - Key: Name
+         Value: bookapp-web-server-01
+
+  EIPAssociation:
+    Type: AWS::EC2::EIPAssociation
+    DependsOn: EC2Instance
+    Properties:
+      AllocationId: !GetAtt EIP.AllocationId
+      InstanceId: !Ref EC2Instance
+    
+Outputs:
+  VPC:
+    Description: A reference to the created VPC
+    Value: !Ref VPC
+
+  PublicSubnet1:
+    Description: A reference to the public subnet in the 1st Availability Zone
+    Value: !Ref PublicSubnet1
+
+  PublicIP:
+    Description: Public IP address of the EC2 instance
+    Value: !GetAtt 
+      - EC2Instance
+      - PublicIp
