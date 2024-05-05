@@ -6,7 +6,6 @@ This is a simple Book Manager Web Application that enables users to add, delete,
 
 ## Features
 
-* Simple Book Manager Web App that enables adding, deleting and updating books. Developed with Python, HTML and CSS, based on Flask backend and Jinja2 frontend. 
 - **Cloud-Based Deployment:** Utilized a CloudFormation template to deploy a VPC, Subnet, and an EC2 instance on AWS, facilitating the running of the web server.
 - **Containerization:** Packaged the app with Docker through Github Actions, allowing for straightforward deployment onto an EC2 instance from Docker Hub.
 - **CI/CD Pipeline:** Implemented a CI/CD pipeline using Github Actions. Each push to the Master branch triggers a build of the Docker image, which is then pushed to the EC2 server.
